@@ -1,7 +1,6 @@
 """
 Flow based cut algorithms
 """
-
 import itertools
 
 import networkx as nx
@@ -22,10 +21,13 @@ __all__ = [
 ]
 
 
-@nx._dispatchable(
-    graphs={"G": 0, "auxiliary?": 4},
-    preserve_edge_attrs={"auxiliary": {"capacity": float("inf")}},
-    preserve_graph_attrs={"auxiliary"},
+@nx._dispatch(
+    graphs={"G": 0, "auxiliary?": 4, "residual?": 5},
+    preserve_edge_attrs={
+        "auxiliary": {"capacity": float("inf")},
+        "residual": {"capacity": float("inf")},
+    },
+    preserve_graph_attrs={"auxiliary", "residual"},
 )
 def minimum_st_edge_cut(G, s, t, flow_func=None, auxiliary=None, residual=None):
     """Returns the edges of the cut-set of a minimum (s, t)-cut.
@@ -159,10 +161,11 @@ def minimum_st_edge_cut(G, s, t, flow_func=None, auxiliary=None, residual=None):
     return cutset
 
 
-@nx._dispatchable(
-    graphs={"G": 0, "auxiliary?": 4},
+@nx._dispatch(
+    graphs={"G": 0, "auxiliary?": 4, "residual?": 5},
+    preserve_edge_attrs={"residual": {"capacity": float("inf")}},
     preserve_node_attrs={"auxiliary": {"id": None}},
-    preserve_graph_attrs={"auxiliary"},
+    preserve_graph_attrs={"auxiliary", "residual"},
 )
 def minimum_st_node_cut(G, s, t, flow_func=None, auxiliary=None, residual=None):
     r"""Returns a set of nodes of minimum cardinality that disconnect source
@@ -302,7 +305,7 @@ def minimum_st_node_cut(G, s, t, flow_func=None, auxiliary=None, residual=None):
     return node_cut - {s, t}
 
 
-@nx._dispatchable
+@nx._dispatch
 def minimum_node_cut(G, s=None, t=None, flow_func=None):
     r"""Returns a set of nodes of minimum cardinality that disconnects G.
 
@@ -448,7 +451,7 @@ def minimum_node_cut(G, s=None, t=None, flow_func=None):
     return min_cut
 
 
-@nx._dispatchable
+@nx._dispatch
 def minimum_edge_cut(G, s=None, t=None, flow_func=None):
     r"""Returns a set of edges of minimum cardinality that disconnects G.
 

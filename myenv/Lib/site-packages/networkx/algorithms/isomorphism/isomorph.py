@@ -1,7 +1,6 @@
 """
 Graph isomorphism functions.
 """
-
 import networkx as nx
 from networkx.exception import NetworkXError
 
@@ -13,7 +12,7 @@ __all__ = [
 ]
 
 
-@nx._dispatchable(graphs={"G1": 0, "G2": 1})
+@nx._dispatch(graphs={"G1": 0, "G2": 1})
 def could_be_isomorphic(G1, G2):
     """Returns False if graphs are definitely not isomorphic.
     True does NOT guarantee isomorphism.
@@ -61,7 +60,7 @@ def could_be_isomorphic(G1, G2):
 graph_could_be_isomorphic = could_be_isomorphic
 
 
-@nx._dispatchable(graphs={"G1": 0, "G2": 1})
+@nx._dispatch(graphs={"G1": 0, "G2": 1})
 def fast_could_be_isomorphic(G1, G2):
     """Returns False if graphs are definitely not isomorphic.
 
@@ -102,7 +101,7 @@ def fast_could_be_isomorphic(G1, G2):
 fast_graph_could_be_isomorphic = fast_could_be_isomorphic
 
 
-@nx._dispatchable(graphs={"G1": 0, "G2": 1})
+@nx._dispatch(graphs={"G1": 0, "G2": 1})
 def faster_could_be_isomorphic(G1, G2):
     """Returns False if graphs are definitely not isomorphic.
 
@@ -135,7 +134,7 @@ def faster_could_be_isomorphic(G1, G2):
 faster_graph_could_be_isomorphic = faster_could_be_isomorphic
 
 
-@nx._dispatchable(
+@nx._dispatch(
     graphs={"G1": 0, "G2": 1},
     preserve_edge_attrs="edge_match",
     preserve_node_attrs="node_match",

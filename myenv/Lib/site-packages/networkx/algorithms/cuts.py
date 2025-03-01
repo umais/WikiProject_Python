@@ -1,4 +1,6 @@
-"""Functions for finding and evaluating cuts in a graph."""
+"""Functions for finding and evaluating cuts in a graph.
+
+"""
 
 from itertools import chain
 
@@ -19,7 +21,7 @@ __all__ = [
 # TODO STILL NEED TO UPDATE ALL THE DOCUMENTATION!
 
 
-@nx._dispatchable(edge_attrs="weight")
+@nx._dispatch(edge_attrs="weight")
 def cut_size(G, S, T=None, weight=None):
     """Returns the size of the cut between two sets of nodes.
 
@@ -82,7 +84,7 @@ def cut_size(G, S, T=None, weight=None):
     return sum(weight for u, v, weight in edges)
 
 
-@nx._dispatchable(edge_attrs="weight")
+@nx._dispatch(edge_attrs="weight")
 def volume(G, S, weight=None):
     """Returns the volume of a set of nodes.
 
@@ -125,7 +127,7 @@ def volume(G, S, weight=None):
     return sum(d for v, d in degree(S, weight=weight))
 
 
-@nx._dispatchable(edge_attrs="weight")
+@nx._dispatch(edge_attrs="weight")
 def normalized_cut_size(G, S, T=None, weight=None):
     """Returns the normalized size of the cut between two sets of nodes.
 
@@ -178,7 +180,7 @@ def normalized_cut_size(G, S, T=None, weight=None):
     return num_cut_edges * ((1 / volume_S) + (1 / volume_T))
 
 
-@nx._dispatchable(edge_attrs="weight")
+@nx._dispatch(edge_attrs="weight")
 def conductance(G, S, T=None, weight=None):
     """Returns the conductance of two sets of nodes.
 
@@ -226,7 +228,7 @@ def conductance(G, S, T=None, weight=None):
     return num_cut_edges / min(volume_S, volume_T)
 
 
-@nx._dispatchable(edge_attrs="weight")
+@nx._dispatch(edge_attrs="weight")
 def edge_expansion(G, S, T=None, weight=None):
     """Returns the edge expansion between two node sets.
 
@@ -273,7 +275,7 @@ def edge_expansion(G, S, T=None, weight=None):
     return num_cut_edges / min(len(S), len(T))
 
 
-@nx._dispatchable(edge_attrs="weight")
+@nx._dispatch(edge_attrs="weight")
 def mixing_expansion(G, S, T=None, weight=None):
     """Returns the mixing expansion between two node sets.
 
@@ -321,7 +323,7 @@ def mixing_expansion(G, S, T=None, weight=None):
 
 # TODO What is the generalization to two arguments, S and T? Does the
 # denominator become `min(len(S), len(T))`?
-@nx._dispatchable
+@nx._dispatch
 def node_expansion(G, S):
     """Returns the node expansion of the set `S`.
 
@@ -361,7 +363,7 @@ def node_expansion(G, S):
 
 # TODO What is the generalization to two arguments, S and T? Does the
 # denominator become `min(len(S), len(T))`?
-@nx._dispatchable
+@nx._dispatch
 def boundary_expansion(G, S):
     """Returns the boundary expansion of the set `S`.
 

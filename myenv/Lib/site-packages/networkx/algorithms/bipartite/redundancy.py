@@ -1,5 +1,4 @@
 """Node redundancy for bipartite graphs."""
-
 from itertools import combinations
 
 import networkx as nx
@@ -8,7 +7,7 @@ from networkx import NetworkXError
 __all__ = ["node_redundancy"]
 
 
-@nx._dispatchable
+@nx._dispatch
 def node_redundancy(G, nodes=None):
     r"""Computes the node redundancy coefficients for the nodes in the bipartite
     graph `G`.

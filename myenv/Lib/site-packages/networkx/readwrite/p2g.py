@@ -31,7 +31,6 @@ edges. Observe that node labeled "c" has an outgoing edge to
 itself. Indeed, self-loops are allowed. Node index starts from 0.
 
 """
-
 import networkx as nx
 from networkx.utils import open_file
 
@@ -58,7 +57,7 @@ def write_p2g(G, path, encoding="utf-8"):
 
 
 @open_file(0, mode="r")
-@nx._dispatchable(graphs=None, returns_graph=True)
+@nx._dispatch(graphs=None)
 def read_p2g(path, encoding="utf-8"):
     """Read graph in p2g format from path.
 
@@ -76,7 +75,7 @@ def read_p2g(path, encoding="utf-8"):
     return G
 
 
-@nx._dispatchable(graphs=None, returns_graph=True)
+@nx._dispatch(graphs=None)
 def parse_p2g(lines):
     """Parse p2g format graph from string or iterable.
 

@@ -57,9 +57,8 @@ class TestNodeOrdering:
             dict(zip(G2, it.cycle(labels_many))),
             "label",
         )
-        l1, l2 = (
-            nx.get_node_attributes(G1, "label"),
-            nx.get_node_attributes(G2, "label"),
+        l1, l2 = nx.get_node_attributes(G1, "label"), nx.get_node_attributes(
+            G2, "label"
         )
 
         gparams = _GraphParameters(
@@ -119,9 +118,8 @@ class TestNodeOrdering:
             dict(zip(G2, it.cycle(labels))),
             "label",
         )
-        l1, l2 = (
-            nx.get_node_attributes(G1, "label"),
-            nx.get_node_attributes(G2, "label"),
+        l1, l2 = nx.get_node_attributes(G1, "label"), nx.get_node_attributes(
+            G2, "label"
         )
         gparams = _GraphParameters(
             G1,
@@ -157,9 +155,8 @@ class TestNodeOrdering:
         G2.nodes[4]["label"] = "red"
         G2.nodes[5]["label"] = "blue"
 
-        l1, l2 = (
-            nx.get_node_attributes(G1, "label"),
-            nx.get_node_attributes(G2, "label"),
+        l1, l2 = nx.get_node_attributes(G1, "label"), nx.get_node_attributes(
+            G2, "label"
         )
         gparams = _GraphParameters(
             G1,

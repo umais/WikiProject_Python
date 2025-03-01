@@ -150,7 +150,7 @@ def write_adjlist(G, path, comments="#", delimiter=" ", encoding="utf-8"):
         path.write(line.encode(encoding))
 
 
-@nx._dispatchable(graphs=None, returns_graph=True)
+@nx._dispatch(graphs=None)
 def parse_adjlist(
     lines, comments="#", delimiter=None, create_using=None, nodetype=None
 ):
@@ -201,7 +201,7 @@ def parse_adjlist(
             line = line[:p]
         if not len(line):
             continue
-        vlist = line.rstrip("\n").split(delimiter)
+        vlist = line.strip().split(delimiter)
         u = vlist.pop(0)
         # convert types
         if nodetype is not None:
@@ -209,7 +209,7 @@ def parse_adjlist(
                 u = nodetype(u)
             except BaseException as err:
                 raise TypeError(
-                    f"Failed to convert node ({u}) to type {nodetype}"
+                    f"Failed to convert node ({u}) to type " f"{nodetype}"
                 ) from err
         G.add_node(u)
         if nodetype is not None:
@@ -224,7 +224,7 @@ def parse_adjlist(
 
 
 @open_file(0, mode="rb")
-@nx._dispatchable(graphs=None, returns_graph=True)
+@nx._dispatch(graphs=None)
 def read_adjlist(
     path,
     comments="#",

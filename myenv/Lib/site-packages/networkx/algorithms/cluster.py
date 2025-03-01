@@ -17,7 +17,7 @@ __all__ = [
 
 
 @not_implemented_for("directed")
-@nx._dispatchable
+@nx._dispatch
 def triangles(G, nodes=None):
     """Compute the number of triangles.
 
@@ -67,18 +67,20 @@ def triangles(G, nodes=None):
 
     # dict used to avoid visiting the same nodes twice
     # this allows calculating/counting each triangle only once
-    later_nbrs = {}
+    later_neighbors = {}
 
     # iterate over the nodes in a graph
     for node, neighbors in G.adjacency():
-        later_nbrs[node] = {n for n in neighbors if n not in later_nbrs and n != node}
+        later_neighbors[node] = {
+            n for n in neighbors if n not in later_neighbors and n != node
+        }
 
     # instantiate Counter for each node to include isolated nodes
     # add 1 to the count if a nodes neighbor's neighbor is also a neighbor
     triangle_counts = Counter(dict.fromkeys(G, 0))
-    for node1, neighbors in later_nbrs.items():
+    for node1, neighbors in later_neighbors.items():
         for node2 in neighbors:
-            third_nodes = neighbors & later_nbrs[node2]
+            third_nodes = neighbors & later_neighbors[node2]
             m = len(third_nodes)
             triangle_counts[node1] += m
             triangle_counts[node2] += m
@@ -143,10 +145,10 @@ def _weighted_triangles_and_degree_iter(G, nodes=None, weight="weight"):
             # Only compute the edge weight once, before the inner inner
             # loop.
             wij = wt(i, j)
-            weighted_triangles += np.cbrt(
-                [(wij * wt(j, k) * wt(k, i)) for k in inbrs & jnbrs]
-            ).sum()
-        yield (i, len(inbrs), 2 * float(weighted_triangles))
+            weighted_triangles += sum(
+                np.cbrt([(wij * wt(j, k) * wt(k, i)) for k in inbrs & jnbrs])
+            )
+        yield (i, len(inbrs), 2 * weighted_triangles)
 
 
 @not_implemented_for("multigraph")
@@ -213,41 +215,41 @@ def _directed_weighted_triangles_and_degree_iter(G, nodes=None, weight="weight")
         for j in ipreds:
             jpreds = set(G._pred[j]) - {j}
             jsuccs = set(G._succ[j]) - {j}
-            directed_triangles += np.cbrt(
-                [(wt(j, i) * wt(k, i) * wt(k, j)) for k in ipreds & jpreds]
-            ).sum()
-            directed_triangles += np.cbrt(
-                [(wt(j, i) * wt(k, i) * wt(j, k)) for k in ipreds & jsuccs]
-            ).sum()
-            directed_triangles += np.cbrt(
-                [(wt(j, i) * wt(i, k) * wt(k, j)) for k in isuccs & jpreds]
-            ).sum()
-            directed_triangles += np.cbrt(
-                [(wt(j, i) * wt(i, k) * wt(j, k)) for k in isuccs & jsuccs]
-            ).sum()
+            directed_triangles += sum(
+                np.cbrt([(wt(j, i) * wt(k, i) * wt(k, j)) for k in ipreds & jpreds])
+            )
+            directed_triangles += sum(
+                np.cbrt([(wt(j, i) * wt(k, i) * wt(j, k)) for k in ipreds & jsuccs])
+            )
+            directed_triangles += sum(
+                np.cbrt([(wt(j, i) * wt(i, k) * wt(k, j)) for k in isuccs & jpreds])
+            )
+            directed_triangles += sum(
+                np.cbrt([(wt(j, i) * wt(i, k) * wt(j, k)) for k in isuccs & jsuccs])
+            )
 
         for j in isuccs:
             jpreds = set(G._pred[j]) - {j}
             jsuccs = set(G._succ[j]) - {j}
-            directed_triangles += np.cbrt(
-                [(wt(i, j) * wt(k, i) * wt(k, j)) for k in ipreds & jpreds]
-            ).sum()
-            directed_triangles += np.cbrt(
-                [(wt(i, j) * wt(k, i) * wt(j, k)) for k in ipreds & jsuccs]
-            ).sum()
-            directed_triangles += np.cbrt(
-                [(wt(i, j) * wt(i, k) * wt(k, j)) for k in isuccs & jpreds]
-            ).sum()
-            directed_triangles += np.cbrt(
-                [(wt(i, j) * wt(i, k) * wt(j, k)) for k in isuccs & jsuccs]
-            ).sum()
+            directed_triangles += sum(
+                np.cbrt([(wt(i, j) * wt(k, i) * wt(k, j)) for k in ipreds & jpreds])
+            )
+            directed_triangles += sum(
+                np.cbrt([(wt(i, j) * wt(k, i) * wt(j, k)) for k in ipreds & jsuccs])
+            )
+            directed_triangles += sum(
+                np.cbrt([(wt(i, j) * wt(i, k) * wt(k, j)) for k in isuccs & jpreds])
+            )
+            directed_triangles += sum(
+                np.cbrt([(wt(i, j) * wt(i, k) * wt(j, k)) for k in isuccs & jsuccs])
+            )
 
         dtotal = len(ipreds) + len(isuccs)
         dbidirectional = len(ipreds & isuccs)
-        yield (i, dtotal, dbidirectional, float(directed_triangles))
+        yield (i, dtotal, dbidirectional, directed_triangles)
 
 
-@nx._dispatchable(edge_attrs="weight")
+@nx._dispatch(edge_attrs="weight")
 def average_clustering(G, nodes=None, weight=None, count_zeros=True):
     r"""Compute the average clustering coefficient for the graph G.
 
@@ -307,7 +309,7 @@ def average_clustering(G, nodes=None, weight=None, count_zeros=True):
     return sum(c) / len(c)
 
 
-@nx._dispatchable(edge_attrs="weight")
+@nx._dispatch(edge_attrs="weight")
 def clustering(G, nodes=None, weight=None):
     r"""Compute the clustering coefficient for nodes.
 
@@ -422,7 +424,7 @@ def clustering(G, nodes=None, weight=None):
     return clusterc
 
 
-@nx._dispatchable
+@nx._dispatch
 def transitivity(G):
     r"""Compute graph transitivity, the fraction of all possible triangles
     present in G.
@@ -445,10 +447,6 @@ def transitivity(G):
     out : float
        Transitivity
 
-    Notes
-    -----
-    Self loops are ignored.
-
     Examples
     --------
     >>> G = nx.complete_graph(5)
@@ -465,7 +463,7 @@ def transitivity(G):
     return 0 if triangles == 0 else triangles / contri
 
 
-@nx._dispatchable
+@nx._dispatch
 def square_clustering(G, nodes=None):
     r"""Compute the squares clustering coefficient for nodes.
 
@@ -544,7 +542,7 @@ def square_clustering(G, nodes=None):
 
 
 @not_implemented_for("directed")
-@nx._dispatchable
+@nx._dispatch
 def generalized_degree(G, nodes=None):
     r"""Compute the generalized degree for nodes.
 
@@ -585,8 +583,6 @@ def generalized_degree(G, nodes=None):
 
     Notes
     -----
-    Self loops are ignored.
-
     In a network of N nodes, the highest triangle multiplicity an edge can have
     is N-2.
 

@@ -1,5 +1,4 @@
 """Functions for computing and verifying matchings in a graph."""
-
 from collections import Counter
 from itertools import combinations, repeat
 
@@ -18,7 +17,7 @@ __all__ = [
 
 @not_implemented_for("multigraph")
 @not_implemented_for("directed")
-@nx._dispatchable
+@nx._dispatch
 def maximal_matching(G):
     r"""Find a maximal matching in the graph.
 
@@ -83,7 +82,7 @@ def matching_dict_to_set(matching):
     return edges
 
 
-@nx._dispatchable
+@nx._dispatch
 def is_matching(G, matching):
     """Return True if ``matching`` is a valid matching of ``G``
 
@@ -144,7 +143,7 @@ def is_matching(G, matching):
     return True
 
 
-@nx._dispatchable
+@nx._dispatch
 def is_maximal_matching(G, matching):
     """Return True if ``matching`` is a maximal matching of ``G``
 
@@ -206,7 +205,7 @@ def is_maximal_matching(G, matching):
     return True
 
 
-@nx._dispatchable
+@nx._dispatch
 def is_perfect_matching(G, matching):
     """Return True if ``matching`` is a perfect matching for ``G``
 
@@ -260,7 +259,7 @@ def is_perfect_matching(G, matching):
 
 @not_implemented_for("multigraph")
 @not_implemented_for("directed")
-@nx._dispatchable(edge_attrs="weight")
+@nx._dispatch(edge_attrs="weight")
 def min_weight_matching(G, weight="weight"):
     """Computing a minimum-weight maximal matching of G.
 
@@ -321,7 +320,7 @@ def min_weight_matching(G, weight="weight"):
 
 @not_implemented_for("multigraph")
 @not_implemented_for("directed")
-@nx._dispatchable(edge_attrs="weight")
+@nx._dispatch(edge_attrs="weight")
 def max_weight_matching(G, maxcardinality=False, weight="weight"):
     """Compute a maximum-weighted matching of G.
 
@@ -411,7 +410,7 @@ def max_weight_matching(G, maxcardinality=False, weight="weight"):
         # and w is a vertex in b.childs[wrap(i+1)].
 
         # If b is a top-level S-blossom,
-        # b.mybestedges is a list of least-slack edges to neighboring
+        # b.mybestedges is a list of least-slack edges to neighbouring
         # S-blossoms, or None if no such list has been computed yet.
         # This is used for efficient computation of delta3.
 
@@ -739,12 +738,12 @@ def max_weight_matching(G, maxcardinality=False, weight="weight"):
                 j += jstep
                 while b.childs[j] != entrychild:
                     # Examine the vertices of the sub-blossom to see whether
-                    # it is reachable from a neighboring S-vertex outside the
+                    # it is reachable from a neighbouring S-vertex outside the
                     # expanding blossom.
                     bv = b.childs[j]
                     if label.get(bv) == 1:
                         # This sub-blossom just got label S through one of its
-                        # neighbors; leave it be.
+                        # neighbours; leave it be.
                         j += jstep
                         continue
                     if isinstance(bv, Blossom):
@@ -973,11 +972,11 @@ def max_weight_matching(G, maxcardinality=False, weight="weight"):
                 v = queue.pop()
                 assert label[inblossom[v]] == 1
 
-                # Scan its neighbors:
+                # Scan its neighbours:
                 for w in G.neighbors(v):
                     if w == v:
                         continue  # ignore self-loops
-                    # w is a neighbor to v
+                    # w is a neighbour to v
                     bv = inblossom[v]
                     bw = inblossom[w]
                     if bv == bw:
